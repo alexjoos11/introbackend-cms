@@ -1,0 +1,41 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+
+# --- Virtual environments ---
+venv/
+.env/
+.envrc
+.venv/
+
+# --- VSCode ---
+.vscode/
+*.code-workspace
+
+# --- Environment / secrets ---
+.env
+*.env
+
+# --- OS-specific ---
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# --- Packaging / installs ---
+dist/
+build/
+pip-wheel-metadata/
+
+# --- Logs ---
+*.log
+
+# --- WSL weirdness ---
+# Sometimes WSL directories create metadata files
+.metadata/
+wsl.log
