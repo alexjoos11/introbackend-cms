@@ -1,5 +1,7 @@
-from db import db  # you may also import your models here, e.g. Course, User, Assignment
-from flask import Flask, request, jsonify
+import json
+
+from db import db, Course, User, Assignment
+from flask import Flask, request
 
 app = Flask(__name__)
 db_filename = "cms.db"
@@ -8,10 +10,24 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_filename}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
 
+#initialize the database
 db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# generalized response formats
+def success_response(data, code=200):
+    return json.dumps(data), code
+
+def failure_response(message, code=404):
+    return json.dumps({"error": message}), code
+
+#get one course and see if it exists helper
+def single_found_check(id, model, name):
+    single = model.query.filter_by(id=id).first()
+    if single is None:
+        return failure_response(name + " not found")
+    return single
 
 # =========================
 #        COURSES
@@ -20,180 +36,95 @@ with app.app_context():
 @app.route("/api/courses/", methods=["GET"])
 def get_all_courses():
     """
-    GET /api/courses/
-    Returns:
-        200: {
-            "courses": [
-                {
-                    "id": ...,
-                    "code": ...,
-                    "name": ...,
-                    "assignments": [ <SERIALIZED ASSIGNMENT W/O COURSE FIELD>, ... ],
-                    "instructors": [ <SERIALIZED USER W/O COURSES FIELD>, ... ],
-                    "students": [ <SERIALIZED USER W/O COURSES FIELD>, ... ]
-                },
-                ...
-            ]
-        }
+    Endpoint for getting all courses
     """
-    # TODO: query all courses, serialize them (omitting nested course/courses fields)
-    return jsonify({"courses": []}), 200
+    return success_response({"courses":[t.serialize() for t in Course.query.all()]})
 
 
 @app.route("/api/courses/", methods=["POST"])
 def create_course():
     """
-    POST /api/courses/
-    Request JSON:
-        {
-            "code": "<course code>",
-            "name": "<course name>"
-        }
-    Returns:
-        201 with serialized course on success:
-            {
-                "id": <ID>,
-                "code": ...,
-                "name": ...,
-                "assignments": [],
-                "instructors": [],
-                "students": []
-            }
-        400 if code or name missing.
+    Endpoint for creating a new course
     """
-    body = request.get_json()
-    # TODO: validate body, create & commit Course, return serialized course
-    return jsonify({"error": "not implemented"}), 501
+    body = json.loads(request.data)
+    new_course = Course(code=body.get("code"), name=body.get("name"))
+    db.session.add(new_course)
+    db.session.commit()
+    return success_response(new_course.serialize(), 201)
 
 
 @app.route("/api/courses/<int:course_id>/", methods=["GET"])
-def get_course(course_id):
+def get_course_by_id(course_id):
     """
-    GET /api/courses/{id}/
-    Returns:
-        200 with serialized course:
-            {
-                "id": <ID>,
-                "code": ...,
-                "name": ...,
-                "assignments": [ <SERIALIZED ASSIGNMENT W/O COURSE FIELD>, ... ],
-                "instructors": [ <SERIALIZED USER W/O COURSES FIELD>, ... ],
-                "students": [ <SERIALIZED USER W/O COURSES FIELD>, ... ]
-            }
-        404 if course not found.
+    Endpoint for getting a course by id
     """
-    # TODO: lookup course by id, serialize, handle 404
-    return jsonify({"error": "not implemented"}), 501
+    course = single_found_check(course_id, Course, "course")
+    return success_response(course.serialize())
 
 
 @app.route("/api/courses/<int:course_id>/", methods=["DELETE"])
 def delete_course(course_id):
     """
-    DELETE /api/courses/{id}/
-    Returns:
-        200 with serialized deleted course (same shape as GET /api/courses/{id}/)
-        404 if course not found.
+    Endpoint for delteing a course by id
     """
-    # TODO: lookup course, delete it, return serialized deleted course
-    return jsonify({"error": "not implemented"}), 501
+    course = single_found_check(course_id, Course, "course")
+    db.session.delete(course)
+    db.session.commit()
+    return success_response(course.serialize())
 
+
+@app.route("/api/users/", methods=["POST"])
+def create_user():
+    """
+    Endpoint for creating a new user
+    """
+    body = json.loads(request.data)
+    new_user = User(name=body.get("name"),netid=body.get("netid"))
+    db.session.add(new_user)
+    db.session.commit()
+    return success_response(new_user.serialize(), 201)
+
+
+@app.route("/api/users/<int:user_id>/", methods=["GET"])
+def get_user_by_id(user_id):
+    """
+    Endpoint fo getting a user by id
+    """
+    user = single_found_check(user_id, User, "user")
+    return success_response(user.serialize())
 
 @app.route("/api/courses/<int:course_id>/add/", methods=["POST"])
 def add_user_to_course(course_id):
     """
-    POST /api/courses/{id}/add/
-    Request JSON:
-        {
-            "user_id": <USER ID>,
-            "type": "student" or "instructor"
-        }
-    Returns:
-        200 with serialized course (same shape as GET /api/courses/{id}/)
-        including the newly added user in the appropriate list.
-        400 if type invalid or body missing fields.
-        404 if course or user not found.
+    Endpoint for adding a user to a course by id
     """
-    body = request.get_json()
-    # TODO: validate body, lookup course and user, add relationship, commit, serialize
-    return jsonify({"error": "not implemented"}), 501
+    course = single_found_check(course_id)
+    body = json.loads(request.data)
+    user_id = body.get("user_id")
+    type = body.get("type")
+    if user_id is None:
+        return failure_response("user not found")
+    if type == "student": course.students.append(user_id)
+    if type == "instructor": course.instructors.append(user_id)
+    db.session.commit()
+    return success_response(course.serialize())
 
 
 @app.route("/api/courses/<int:course_id>/assignment/", methods=["POST"])
 def create_assignment(course_id):
     """
-    POST /api/courses/{id}/assignment/
-    Request JSON:
-        {
-            "title": "<title>",
-            "due_date": <unix timestamp>
-        }
-    Returns:
-        201:
-            {
-                "id": <ASSIGNMENT ID>,
-                "title": ...,
-                "due_date": ...,
-                "course": {
-                    "id": <course_id>,
-                    "code": ...,
-                    "name": ...
-                }
-            }
-        400 if title or due_date missing.
-        404 if course not found.
+    endpoint for creating an assignment for a course by id
     """
-    body = request.get_json()
-    # TODO: validate body, lookup course, create Assignment, commit, serialize
-    return jsonify({"error": "not implemented"}), 501
-
-
-# =========================
-#          USERS
-# =========================
-
-@app.route("/api/users/", methods=["POST"])
-def create_user():
-    """
-    POST /api/users/
-    Request JSON:
-        {
-            "name": "<user name>",
-            "netid": "<netid>"
-        }
-    Returns:
-        201:
-            {
-                "id": <ID>,
-                "name": ...,
-                "netid": ...,
-                "courses": []
-            }
-        400 if name or netid missing.
-    """
-    body = request.get_json()
-    # TODO: validate body, create & commit User, serialize response
-    return jsonify({"error": "not implemented"}), 501
-
-
-@app.route("/api/users/<int:user_id>/", methods=["GET"])
-def get_user(user_id):
-    """
-    GET /api/users/{id}/
-    Returns:
-        200:
-            {
-                "id": <ID>,
-                "name": ...,
-                "netid": ...,
-                "courses": [
-                    <SERIALIZED COURSE W/O assignments/students/instructors>, ...
-                ]
-            }
-        404 if user not found.
-    Note: courses should include *all* courses where the user is a student or instructor.
-    """
-    # TODO: lookup user, gather all courses (student + instructor), serialize
-    return jsonify({"error": "not implemented"}), 501
+    course = single_found_check(course_id, Course, "course")
+    body = json.loads(request.data)
+    new_assignment = Assignment(
+        title=body.get("title"),
+        name=body.get("name"),
+        course_id=course_id,
+    )
+    db.session.add(new_assignment)
+    db.session.commit()
+    return success_response(new_assignment.serialize(), 201)
 
 
 if __name__ == "__main__":

@@ -1,8 +1,7 @@
 import json
 
 from db import db, Task, Subtask, Category
-from flask import Flask
-from requests import request
+from flask import Flask, request
 
 # define db filename
 db_filename = "todo.db"
@@ -46,7 +45,7 @@ def get_tasks():
 @app.route("/tasks/", methods=["POST"])
 def create_task():
     """
-    Endpoint for creating a new task
+        Endpoint for creating a new task
     """
     body = json.loads(request.data)
     new_task = Task(description=body.get("description"),done=body.get("done"))

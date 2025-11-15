@@ -48,7 +48,7 @@ class Subtask(db.Model):
     """
     Subtask model
     """
-    __tablename__ = "subtassk"    
+    __tablename__ = "subtask"    
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)    
     description = db.Column(db.String, nullable=False)    
     done = db.Column(db.Boolean, nullable=False)    
@@ -81,7 +81,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)    
     description = db.Column(db.String, nullable=False)    
     color = db.Column(db.String, nullable=False)
-    categories = db.relationship("Task", secondary=association_table, back_populates="categories")
+    tasks = db.relationship("Task", secondary=association_table, back_populates="categories")
 
     def __init__(self, **kwargs):
         """
