@@ -30,8 +30,8 @@ class Course(db.Model):
     code = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
     assignments = db.relationship("Assignment", cascade="delete")
-    instructors = db.relationship("User",secondary=instructors_association_table, back_populates="courses")
-    students = db.relationship("User", secondary=students_association_table, back_populates="courses")
+    instructors = db.relationship("User",secondary=instructors_association_table, back_populates="instructor_courses")
+    students = db.relationship("User", secondary=students_association_table, back_populates="student_courses")
 
     def __init__(self, **kwargs):
         """
@@ -48,9 +48,19 @@ class Course(db.Model):
             "id": self.id,
             "code": self.code,
             "name":self.name,
-            "assignments": [a.serialize() for a in self.assignments],
-            "instructors": [i.serialize() for i in self.instructors],
-            "students": [s.serialize() for s in self.students],
+            "assignments": [a.simple_serialize() for a in self.assignments],
+            "instructors": [i.simple_serialize() for i in self.instructors],
+            "students": [s.simple_serialize() for s in self.students],
+        }
+    
+    def simple_serialize(self):
+        """
+        Serialize a Course object without its relationships
+        """
+        return {
+            "id": self.id,
+            "code": self.code,
+            "name":self.name,
         }
     
 
@@ -83,6 +93,16 @@ class Assignment(db.Model):
             "due_date": self.due_date,
             "course_id": self.course_id,
         }
+    
+    def simple_serialize(self):
+        """
+        serialize an assignment object without relationships
+        """
+        return {
+            "id": self.id,
+            "title": self.title,
+            "due_date": self.due_date,
+        }
 
 
 class User(db.Model):
@@ -94,8 +114,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String, nullable=False)
     netid = db.Column(db.String, nullable=False)
-    courses_instructor = db.relationship("Course", secondary=instructors_association_table, back_populates="users")
-    courses_student = db.relationship("Course", secondary=students_association_table, back_populates="users")
+    courses_instructor = db.relationship("Course", secondary=instructors_association_table, back_populates="instructors")
+    courses_student = db.relationship("Course", secondary=students_association_table, back_populates="students")
 
     def __init__(self, **kwargs):
         """
@@ -108,7 +128,7 @@ class User(db.Model):
         course_ids = {}
         for course in self.student_courses + self.instructor_courses:
             course_ids[course.id] = course
-        return list(course_ids.values())
+        return [c.simple_serialize() for c in course_ids.values()]
 
     def serialize(self):
         """

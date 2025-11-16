@@ -15,7 +15,7 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# generalized response formats
+# generalized helper formats
 def success_response(data, code=200):
     return json.dumps(data), code
 
@@ -23,12 +23,22 @@ def failure_response(message, code=404):
     return json.dumps({"error": message}), code
 
 #get one course and see if it exists helper
-def single_found_check(id, model, name):
+def single_not_found_check(id, model, name):
     single = model.query.filter_by(id=id).first()
     if single is None:
         return failure_response(name + " not found")
     return single
 
+def missing_args_check(argtuple, body):
+    restup = ()
+    for a in argtuple:
+        r = body.get(a)
+        if r is None: return failure_response("missing arguments", 400)
+        restup.append(r)
+    return restup
+
+
+    
 # =========================
 #        COURSES
 # =========================
@@ -47,7 +57,8 @@ def create_course():
     Endpoint for creating a new course
     """
     body = json.loads(request.data)
-    new_course = Course(code=body.get("code"), name=body.get("name"))
+    code, name = missing_args_check(("code", "name"), body)
+    new_course = Course(code=code, name=name)
     db.session.add(new_course)
     db.session.commit()
     return success_response(new_course.serialize(), 201)
@@ -58,7 +69,7 @@ def get_course_by_id(course_id):
     """
     Endpoint for getting a course by id
     """
-    course = single_found_check(course_id, Course, "course")
+    course, _ = single_not_found_check(course_id, Course, "course")
     return success_response(course.serialize())
 
 
@@ -67,7 +78,7 @@ def delete_course(course_id):
     """
     Endpoint for delteing a course by id
     """
-    course = single_found_check(course_id, Course, "course")
+    course, _ = single_not_found_check(course_id, Course, "course")
     db.session.delete(course)
     db.session.commit()
     return success_response(course.serialize())
@@ -79,7 +90,8 @@ def create_user():
     Endpoint for creating a new user
     """
     body = json.loads(request.data)
-    new_user = User(name=body.get("name"),netid=body.get("netid"))
+    name, netid = missing_args_check(("name", "netid"), body)
+    new_user = User(name=name, netid=netid)
     db.session.add(new_user)
     db.session.commit()
     return success_response(new_user.serialize(), 201)
@@ -90,7 +102,7 @@ def get_user_by_id(user_id):
     """
     Endpoint fo getting a user by id
     """
-    user = single_found_check(user_id, User, "user")
+    user, _ = single_not_found_check(user_id, User, "user")
     return success_response(user.serialize())
 
 @app.route("/api/courses/<int:course_id>/add/", methods=["POST"])
@@ -98,14 +110,12 @@ def add_user_to_course(course_id):
     """
     Endpoint for adding a user to a course by id
     """
-    course = single_found_check(course_id)
+    course, _ = single_not_found_check(course_id, Course, "course")
     body = json.loads(request.data)
-    user_id = body.get("user_id")
+    user = missing_args_check(("user_id"), body)
     type = body.get("type")
-    if user_id is None:
-        return failure_response("user not found")
-    if type == "student": course.students.append(user_id)
-    if type == "instructor": course.instructors.append(user_id)
+    if type == "student": course.students.append(user)
+    if type == "instructor": course.instructors.append(user)
     db.session.commit()
     return success_response(course.serialize())
 
@@ -115,11 +125,12 @@ def create_assignment(course_id):
     """
     endpoint for creating an assignment for a course by id
     """
-    course = single_found_check(course_id, Course, "course")
+    _, _ = single_not_found_check(course_id, Course, "course")
     body = json.loads(request.data)
+    title, due_date = missing_args_check(("title", "due_date"), body)
     new_assignment = Assignment(
-        title=body.get("title"),
-        name=body.get("name"),
+        title=title,
+        due_date=due_date,
         course_id=course_id,
     )
     db.session.add(new_assignment)
