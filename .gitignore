@@ -20,4 +20,6 @@ pip-wheel-metadata/
 .metadata/
 wsl.log
 instance/
-src-project/pa4_test.py
+*/pa4_test.py
+src-demo/
+*/src-demo/

@@ -1,0 +1,908 @@
+{
+	"info": {
+		"_postman_id": "9f4e01f0-e835-4ec1-a8c1-2ad6b54c8597",
+		"name": "cms API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49538738",
+		"_collection_link": "https://alexjoos11-2232471.postman.co/workspace/introbackend-cms~02165304-1681-4c83-a18b-51ba6ef83198/collection/49538738-9f4e01f0-e835-4ec1-a8c1-2ad6b54c8597?action=share&source=collection_link&creator=49538738"
+	},
+	"item": [
+		{
+			"name": "create course 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    code: \"CS1998\",\r",
+							"    name: \"Intro to Backend Development\",\r",
+							"    assignments: [],\r",
+							"    instructors: [],\r",
+							"    students: []\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"code\": \"CS1998\",\r\n  \"name\": \"Intro to Backend Development\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create course 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 2,\r",
+							"    code: \"CS1110\",\r",
+							"    name: \"Intro to Computer Science: Python\",\r",
+							"    assignments: [],\r",
+							"    instructors: [],\r",
+							"    students: []\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"code\": \"CS1110\",\r\n  \"name\": \"Intro to Computer Science: Python\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    name: \"Alex Joos\",\r",
+							"    netid: \"aaj46\",\r",
+							"    courses: []\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Alex Joos\",\r\n  \"netid\": \"aaj46\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/users/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 2,\r",
+							"    name: \"Balex\",\r",
+							"    netid: \"bbj46\",\r",
+							"    courses: []\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Balex\",\r\n  \"netid\": \"bbj46\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/users/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add user1 to course 1 (student)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    code: \"CS1998\",\r",
+							"    name: \"Intro to Backend Development\",\r",
+							"    assignments: [],\r",
+							"    instructors: [],\r",
+							"    students: [\r",
+							"      { id: 1, name: \"Alex Joos\", netid: \"aaj46\" }\r",
+							"    ]\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_id\": 1,\r\n  \"type\": \"student\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/1/add/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"1",
+						"add",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add user 2 to course 1 (instructor)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    code: \"CS1998\",\r",
+							"    name: \"Intro to Backend Development\",\r",
+							"    assignments: [],\r",
+							"    instructors: [\r",
+							"      { id: 2, name: \"Balex\", netid: \"bbj46\" }\r",
+							"    ],\r",
+							"    students: [\r",
+							"      { id: 1, name: \"Alex Joos\", netid: \"aaj46\" }\r",
+							"    ]\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_id\": 2,\r\n  \"type\": \"instructor\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/1/add/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"1",
+						"add",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create assignment for course 1 (assignment 1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => {\r",
+							"  pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    title: \"PA4\",\r",
+							"    due_date: 1553354209,\r",
+							"    course: {\r",
+							"      id: 1,\r",
+							"      code: \"CS1998\",\r",
+							"      name: \"Intro to Backend Development\"\r",
+							"    }\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"PA4\",\r\n  \"due_date\": 1553354209\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/1/assignment/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"1",
+						"assignment",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all courses valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    courses: [\r",
+							"      {\r",
+							"        id: 1,\r",
+							"        code: \"CS1998\",\r",
+							"        name: \"Intro to Backend Development\",\r",
+							"        // assignments WITHOUT course field\r",
+							"        assignments: [\r",
+							"          { id: 1, title: \"PA4\", due_date: 1553354209 }\r",
+							"        ],\r",
+							"        // users WITHOUT courses field\r",
+							"        instructors: [\r",
+							"          { id: 2, name: \"Balex\", netid: \"bbj46\" }\r",
+							"        ],\r",
+							"        students: [\r",
+							"          { id: 1, name: \"Alex Joos\", netid: \"aaj46\" }\r",
+							"        ]\r",
+							"      },\r",
+							"      {\r",
+							"        id: 2,\r",
+							"        code: \"CS1110\",\r",
+							"        name: \"Intro to Computer Science: Python\",\r",
+							"        assignments: [],\r",
+							"        instructors: [],\r",
+							"        students: []\r",
+							"      }\r",
+							"    ]\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/courses/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create course 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"  pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"code\": \"CS9999\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    code: \"CS1998\",\r",
+							"    name: \"Intro to Backend Development\",\r",
+							"    assignments: [\r",
+							"      { id: 1, title: \"PA4\", due_date: 1553354209 }\r",
+							"    ],\r",
+							"    instructors: [\r",
+							"      { id: 2, name: \"Balex\", netid: \"bbj46\" }\r",
+							"    ],\r",
+							"    students: [\r",
+							"      { id: 1, name: \"Alex Joos\", netid: \"aaj46\" }\r",
+							"    ]\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/courses/1/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"  pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/courses/9999/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"9999",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete course valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 2,\r",
+							"    code: \"CS1110\",\r",
+							"    name: \"Intro to Computer Science: Python\",\r",
+							"    assignments: [],\r",
+							"    instructors: [],\r",
+							"    students: []\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/courses/2/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete course 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"  pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/courses/2/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"  pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"No NetID\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/users/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response body matches expected output\", () => {\r",
+							"  const expected = {\r",
+							"    id: 1,\r",
+							"    name: \"Alex Joos\",\r",
+							"    netid: \"aaj46\",\r",
+							"    // courses WITHOUT assignments/students/instructors fields\r",
+							"    courses: [\r",
+							"      { id: 1, code: \"CS1998\", name: \"Intro to Backend Development\" }\r",
+							"    ]\r",
+							"  };\r",
+							"  pm.expect(pm.response.json()).to.eql(expected);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/users/1/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => {\r",
+							"  pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{localhost}}/api/users/9999/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"9999",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add user to course 400",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"  pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"user_id\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/1/add/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"1",
+						"add",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create assignment 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", () => {\r",
+							"  pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"due_date\": 1553354209\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{localhost}}/api/courses/1/assignment/",
+					"host": [
+						"{{localhost}}"
+					],
+					"path": [
+						"api",
+						"courses",
+						"1",
+						"assignment",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
