@@ -29,6 +29,7 @@ def single_not_found_check(id, model, name):
         return None, failure_response(name + " not found")
     return single, None
 
+#check for missing arguments helper
 def missing_args_check(keys, body):
     values = []
     for key in keys:
@@ -39,7 +40,6 @@ def missing_args_check(keys, body):
     return tuple(values), None
 
 
-    
 # =========================
 #        COURSES
 # =========================

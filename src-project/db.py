@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-#assoc tables
+# -- ASSOCIATION TABLES FOR MANY-TO-MANY RELATIONSHIPS ------------------------------------------------
 students_association_table = db.Table(
     "students_course_user_association",
     db.Model.metadata,
@@ -17,8 +17,7 @@ instructors_association_table = db.Table(
     db.Column("user_id", db.Integer, db.ForeignKey("users.id"))
 )
 
-
-# your classes here
+# -- CLASSES --------------------------------------------------------------------------------------------
 class Course(db.Model):
     """
     Course model
@@ -127,6 +126,8 @@ class User(db.Model):
         self.netid = kwargs.get("netid")
 
     def all_courses(self):
+        """
+        get all courses a user is in (as student or instructor)"""
         course_ids = {}
         for course in self.courses_student + self.courses_instructor:
             course_ids[course.id] = course
