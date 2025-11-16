@@ -26,16 +26,17 @@ def failure_response(message, code=404):
 def single_not_found_check(id, model, name):
     single = model.query.filter_by(id=id).first()
     if single is None:
-        return failure_response(name + " not found")
-    return single
+        return None, failure_response(name + " not found")
+    return single, None
 
-def missing_args_check(argtuple, body):
-    restup = ()
-    for a in argtuple:
-        r = body.get(a)
-        if r is None: return failure_response("missing arguments", 400)
-        restup.append(r)
-    return restup
+def missing_args_check(keys, body):
+    values = []
+    for key in keys:
+        v = body.get(key)
+        if v is None:
+            return None, failure_response("missing arguments", 400)
+        values.append(v)
+    return tuple(values), None
 
 
     
@@ -57,7 +58,10 @@ def create_course():
     Endpoint for creating a new course
     """
     body = json.loads(request.data)
-    code, name = missing_args_check(("code", "name"), body)
+    v, err = missing_args_check(("code", "name"), body)
+    if err is not None:
+        return err
+    code, name = v
     new_course = Course(code=code, name=name)
     db.session.add(new_course)
     db.session.commit()
@@ -69,7 +73,9 @@ def get_course_by_id(course_id):
     """
     Endpoint for getting a course by id
     """
-    course, _ = single_not_found_check(course_id, Course, "course")
+    course, err = single_not_found_check(course_id, Course, "course")
+    if err is not None:
+        return err
     return success_response(course.serialize())
 
 
@@ -78,7 +84,9 @@ def delete_course(course_id):
     """
     Endpoint for delteing a course by id
     """
-    course, _ = single_not_found_check(course_id, Course, "course")
+    course, err = single_not_found_check(course_id, Course, "course")
+    if err is not None:
+        return err
     db.session.delete(course)
     db.session.commit()
     return success_response(course.serialize())
@@ -90,7 +98,10 @@ def create_user():
     Endpoint for creating a new user
     """
     body = json.loads(request.data)
-    name, netid = missing_args_check(("name", "netid"), body)
+    v, err = missing_args_check(("name", "netid"), body)
+    if err is not None:
+        return err
+    name, netid = v
     new_user = User(name=name, netid=netid)
     db.session.add(new_user)
     db.session.commit()
@@ -102,7 +113,8 @@ def get_user_by_id(user_id):
     """
     Endpoint fo getting a user by id
     """
-    user, _ = single_not_found_check(user_id, User, "user")
+    user, err = single_not_found_check(user_id, User, "user")
+    if err is not None: return err
     return success_response(user.serialize())
 
 @app.route("/api/courses/<int:course_id>/add/", methods=["POST"])
@@ -110,10 +122,18 @@ def add_user_to_course(course_id):
     """
     Endpoint for adding a user to a course by id
     """
-    course, _ = single_not_found_check(course_id, Course, "course")
+    course, err = single_not_found_check(course_id, Course, "course")
+    if err is not None: return err
     body = json.loads(request.data)
-    user = missing_args_check(("user_id"), body)
+    v, err = missing_args_check(("user_id",), body)
+    if err is not None: return err
+    user_id = v[0]
+    user, err = single_not_found_check(user_id, User, "user")
+    if err is not None: return err
+
     type = body.get("type")
+    if type not in ["student", "instructor"]:
+        return failure_response("type must be student or instructor", 400)
     if type == "student": course.students.append(user)
     if type == "instructor": course.instructors.append(user)
     db.session.commit()
@@ -125,9 +145,14 @@ def create_assignment(course_id):
     """
     endpoint for creating an assignment for a course by id
     """
-    _, _ = single_not_found_check(course_id, Course, "course")
+    _, err = single_not_found_check(course_id, Course, "course")
+    if err is not None:
+        return err
     body = json.loads(request.data)
-    title, due_date = missing_args_check(("title", "due_date"), body)
+    v, err = missing_args_check(("title", "due_date"), body)
+    if err is not None:
+        return err
+    title, due_date = v
     new_assignment = Assignment(
         title=title,
         due_date=due_date,

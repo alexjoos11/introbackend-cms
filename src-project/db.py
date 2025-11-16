@@ -30,8 +30,8 @@ class Course(db.Model):
     code = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
     assignments = db.relationship("Assignment", cascade="delete")
-    instructors = db.relationship("User",secondary=instructors_association_table, back_populates="instructor_courses")
-    students = db.relationship("User", secondary=students_association_table, back_populates="student_courses")
+    instructors = db.relationship("User",secondary=instructors_association_table, back_populates="courses_instructor")
+    students = db.relationship("User", secondary=students_association_table, back_populates="courses_student")
 
     def __init__(self, **kwargs):
         """
@@ -73,7 +73,9 @@ class Assignment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)    
     title = db.Column(db.String, nullable=False)
     due_date = db.Column(db.Integer, nullable=False)
+
     course_id = db.Column(db.Integer, db.ForeignKey("courses.id"), nullable=False)
+    course = db.relationship("Course", back_populates="assignments")
     
     def __init__(self, **kwargs):
         """
@@ -91,7 +93,7 @@ class Assignment(db.Model):
             "id": self.id,
             "title": self.title,
             "due_date": self.due_date,
-            "course_id": self.course_id,
+            "course": self.course.simple_serialize(),
         }
     
     def simple_serialize(self):
@@ -126,7 +128,7 @@ class User(db.Model):
 
     def all_courses(self):
         course_ids = {}
-        for course in self.student_courses + self.instructor_courses:
+        for course in self.courses_student + self.courses_instructor:
             course_ids[course.id] = course
         return [c.simple_serialize() for c in course_ids.values()]
 
