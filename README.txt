@@ -1,8 +1,8 @@
-Name:
-NetID:
+Name: Alexander Joos
+NetID: aaj46
 
 Challenges Attempted (Tier I/II/III):
-Working Endpoint: <Put a working endpoint from PA 4 here (e.g. GET /api/courses/)>
+Working Endpoint: POST /api/courses/
 Your Docker Hub Repository Link:
 
 Questions:
